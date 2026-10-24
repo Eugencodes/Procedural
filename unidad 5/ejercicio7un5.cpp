@@ -17,12 +17,13 @@ typedef struct{
 void crearNodo(info curso[N]);
 void carga(info curso[N]);
 void procesa(info curso[N]);
-void eliminarinsc(info curso[N], int dning);
+void eliminarinscRec(info cursos[N], int dning, int i, puntero &aux);
 void mostrarcurso(info curso[N], int dning2, int i, puntero aux);
-void intercambiar(info curso[N]);
+void intercambiar(puntero &cab);
 
 int main(){
 	info curso[N];
+	puntero aux;
 	int dning,dning2, i;
 	i=0;
 	crearNodo(curso);
@@ -30,11 +31,11 @@ int main(){
 	procesa(curso);
 	printf("ingrese DNI para eliminar inscripcion\n");
 	scanf("%d",&dning);
-	eliminarinsc(curso, dning);
+	eliminarinscRec(curso,dning,0,curso[0].cab);
 	printf("ingrese DNI para conocer cursos inscriptos\n");
 	scanf("%d",&dning2);
 	mostrarcurso(curso,dning2,i,curso[0].cab);
-	intercambiar(curso);
+	intercambiar(curso[6].cab);
 }
 
 void crearNodo(info curso[N]){
@@ -65,31 +66,23 @@ void procesa(info curso[N]){
 		nuevo->dni=dni;
 		nuevo->sig=curso[cur-1].cab;
 		curso[cur-1].cab=nuevo;
-		printf("dsaopdjas");
-		
+		printf("dsaopdjas");	
 	}	
 }
 
-void eliminarinsc(info cursos[N], int dning){
-	int i;
-	puntero anterior, p;
-	for(i=0;i<N;i++){
-		if ((cursos[i].cab != NULL) && (cursos[i].cab->dni == dning)){ // Caso 1: Es la cabeza
-			p = cursos[i].cab;
-			cursos[i].cab = cursos[i].cab->sig;
-			free (p); // Liberación física
-		}else{
-			p = cursos[i].cab;
-			anterior = cursos[i].cab;
-			while (p != NULL && p->dni != dning) {
-				anterior = p; // Resguardo del anterior
-				p = p->sig;
+void eliminarinscRec(info cursos[N], int dning, int i, puntero &aux){
+	if(i<N){
+		if(aux != NULL){
+			if(dning == aux->dni){
+				puntero aux1 = aux;
+				aux = aux->sig;	
+				free(aux1);		
+			}else{
+				eliminarinscRec(cursos,dning,i,aux->sig);		
 			}
-			if (p != NULL){ // Caso 2: Se encontró adentro o al final
-				anterior->sig = p->sig; // Salto del nodo p
-				free (p) ;
-			}
-		} 
+		}else if(i+1<N){	
+    		eliminarinscRec(cursos, dning, i+1, cursos[i+1].cab);
+		}
 	}
 }
 
@@ -105,6 +98,13 @@ void mostrarcurso(info curso[N], int dning2, int i, puntero aux){
 	}
 }
 
-void intercambiar (info curso[N]){
-	
+void intercambiar (puntero &cab){
+	puntero aux1,aux2;
+	if(cab!=NULL && cab->sig != NULL && cab->sig->sig != NULL){
+		aux1=cab->sig;
+		aux2=aux1->sig;
+		aux1->sig = aux2->sig;
+		aux2->sig=aux1;
+		cab->sig=aux2;
+	}
 }
