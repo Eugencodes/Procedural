@@ -43,9 +43,7 @@ void promedio(FILE *archi, datos alumno){
 	while(!feof(archi)){
 		if (fscanf(archi,"%d","%s","%f",&alumno.legajo,alumno.nombre,&alumno.notaf == 3){
 		acum+=alumno.notaf;
-		printf
-		printf
-		printf
+		printf("%d %s %.2f\n", alu.leg, alu.nom, alu.notF);
 		}
 	}
 	prom=acum/3;
